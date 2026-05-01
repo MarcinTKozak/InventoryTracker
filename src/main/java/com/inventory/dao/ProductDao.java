@@ -32,20 +32,20 @@ public class ProductDao {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM products";
 
-        try (Statement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ResultSet rs = stmt.executeQuery(sql) {
-                while (rs.next()) {
-                    Product product = new Product(
-                            rs.getString("name"),
-                            rs.getString("category"),
-                            rs.getInt("quantity"),
-                            rs.getDouble("price")
-                    );
-                    product.setId(rs.getInt("id"));
-                    products.add(product);
-                }
-
+        try (Statement stmt = DatabaseConnection.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Product product = new Product(
+                        rs.getString("name"),
+                        rs.getString("category"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price")
+                );
+                product.setId(rs.getInt("id"));
+                products.add(product);
             }
+
+
         } catch (SQLException e) {
             System.out.println("Error fetching products: " + e.getMessage());
         }
