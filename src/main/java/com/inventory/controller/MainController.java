@@ -108,4 +108,27 @@ public class MainController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
+    public void handleViewDetails() {
+        Product selected = productTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("No selection", "Please select a product to view.");
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/inventory/view/ProductDetailsView.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Product Details");
+            stage.setScene(new Scene(loader.load()));
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            ProductDetailsController controller = loader.getController();
+            controller.setProduct(selected);
+
+            stage.showAndWait();
+        } catch (IOException e) {
+            System.out.println("Error opening Product Details window: " + e.getMessage());
+        }
+    }
 }
