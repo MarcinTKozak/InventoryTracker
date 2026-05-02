@@ -131,4 +131,10 @@ public class MainController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
+    public void handleReset() {
+        productTable.getSelectionModel().clearSelection();
+        clearFields();
+    }
 }

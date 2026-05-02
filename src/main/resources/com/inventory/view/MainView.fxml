@@ -18,6 +18,7 @@
                 <Button text="Add Product" onAction="#handleAddProduct"/>
                 <Button text="Update" onAction="#handleUpdateProduct"/>
                 <Button text="Delete" onAction="#handleDeleteProduct"/>
+                <Button text="Reset" onAction="#handleReset"/>
             </HBox>
         </VBox>
     </top>
