@@ -8,19 +8,30 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+
 public class MainController {
 
-    @FXML private TextField nameField;
-    @FXML private TextField categoryField;
-    @FXML private TextField quantityField;
-    @FXML private TextField priceField;
+    @FXML
+    private TextField nameField;
+    @FXML
+    private TextField categoryField;
+    @FXML
+    private TextField quantityField;
+    @FXML
+    private TextField priceField;
 
-    @FXML private TableView<Product> productTable;
-    @FXML private TableColumn<Product, Integer> idColumn;
-    @FXML private TableColumn<Product, String> nameColumn;
-    @FXML private TableColumn<Product, String> categoryColumn;
-    @FXML private TableColumn<Product, Integer> quantityColumn;
-    @FXML private TableColumn<Product, Double> priceColumn;
+    @FXML
+    private TableView<Product> productTable;
+    @FXML
+    private TableColumn<Product, Integer> idColumn;
+    @FXML
+    private TableColumn<Product, String> nameColumn;
+    @FXML
+    private TableColumn<Product, String> categoryColumn;
+    @FXML
+    private TableColumn<Product, Integer> quantityColumn;
+    @FXML
+    private TableColumn<Product, Double> priceColumn;
 
     private final ProductService productService = new ProductService();
     private final ObservableList<Product> productList = FXCollections.observableArrayList();
@@ -35,6 +46,15 @@ public class MainController {
 
         productTable.setItems(productList);
         loadProducts();
+
+        productTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                nameField.setText(newVal.getName());
+                categoryField.setText(newVal.getCategory());
+                quantityField.setText(String.valueOf(newVal.getQuantity()));
+                priceField.setText(String.valueOf(newVal.getPrice()));
+            }
+        });
     }
 
     @FXML
@@ -68,6 +88,8 @@ public class MainController {
             selected.setQuantity(Integer.parseInt(quantityField.getText()));
             selected.setPrice(Double.parseDouble(priceField.getText()));
 
+            System.out.println("Updating product with ID: " + selected.getId());
+
             productService.updateProduct(selected);
             loadProducts();
             clearFields();
@@ -93,6 +115,7 @@ public class MainController {
     private void loadProducts() {
         productList.clear();
         productList.addAll(productService.getAllProducts());
+        productTable.refresh();
     }
 
     private void clearFields() {

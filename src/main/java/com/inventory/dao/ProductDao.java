@@ -51,7 +51,7 @@ public class ProductDao {
         return products;
     }
 
-    public void updateProducts(Product product) {
+    public void updateProduct(Product product) {
         String sql = "UPDATE products SET name=?, category=?, quantity=?, price=? WHERE id=?";
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
@@ -59,6 +59,7 @@ public class ProductDao {
             stmt.setString(2, product.getCategory());
             stmt.setInt(3, product.getQuantity());
             stmt.setDouble(4, product.getPrice());
+            stmt.setInt(5, product.getId());
             stmt.executeUpdate();
             System.out.println("Product updated successfully.");
         } catch (SQLException e) {

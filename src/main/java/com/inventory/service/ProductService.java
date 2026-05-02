@@ -37,7 +37,7 @@ public class ProductService {
         if (product.getPrice() < 0) {
             throw new IllegalArgumentException("Price cannot be negative");
         }
-        productDao.updateProducts(product);
+        productDao.updateProduct(product);
     }
 
     public void deleteProduct(int id) {
