@@ -5,20 +5,16 @@ import com.inventory.service.ProductService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 
 public class MainController {
-
-    @FXML
-    private TextField nameField;
-    @FXML
-    private TextField categoryField;
-    @FXML
-    private TextField quantityField;
-    @FXML
-    private TextField priceField;
 
     @FXML
     private TableView<Product> productTable;
@@ -46,57 +42,47 @@ public class MainController {
 
         productTable.setItems(productList);
         loadProducts();
-
-        productTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                nameField.setText(newVal.getName());
-                categoryField.setText(newVal.getCategory());
-                quantityField.setText(String.valueOf(newVal.getQuantity()));
-                priceField.setText(String.valueOf(newVal.getPrice()));
-            }
-        });
     }
 
     @FXML
     public void handleAddProduct() {
         try {
-            String name = nameField.getText();
-            String category = categoryField.getText();
-            int quantity = Integer.parseInt(quantityField.getText());
-            double price = Double.parseDouble(priceField.getText());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/inventory/view/AddProductView.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Add Product");
+            stage.setScene(new Scene(loader.load()));
+            stage.initModality(Modality.APPLICATION_MODAL);
 
-            productService.addProduct(name, category, quantity, price);
-            loadProducts();
-            clearFields();
-        } catch (NumberFormatException e) {
-            showAlert("Invalid input", "Quantity must be a number and price must be a decimal.");
-        } catch (IllegalArgumentException e) {
-            showAlert("Validation error", e.getMessage());
+            AddProductController controller = loader.getController();
+            controller.setOnProductAdded(this::loadProducts);
+
+            stage.showAndWait();
+        } catch (IOException e) {
+            System.out.println("Error opening Add Product window: " + e.getMessage());
         }
     }
 
     @FXML
-    public void handleUpdateProduct() {
+    public void handleEditProduct() {
         Product selected = productTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert("No selection", "Please select a product to update.");
+            showAlert("No selection", "Please select a product to edit.");
             return;
         }
         try {
-            selected.setName(nameField.getText());
-            selected.setCategory(categoryField.getText());
-            selected.setQuantity(Integer.parseInt(quantityField.getText()));
-            selected.setPrice(Double.parseDouble(priceField.getText()));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/inventory/view/EditProductView.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Edit Product");
+            stage.setScene(new Scene(loader.load()));
+            stage.initModality(Modality.APPLICATION_MODAL);
 
-            System.out.println("Updating product with ID: " + selected.getId());
+            EditProductController controller = loader.getController();
+            controller.setProduct(selected);
+            controller.setOnProductUpdated(this::loadProducts);
 
-            productService.updateProduct(selected);
-            loadProducts();
-            clearFields();
-        } catch (NumberFormatException e) {
-            showAlert("Invalid input", "Quantity must be a number and price must be a decimal.");
-        } catch (IllegalArgumentException e) {
-            showAlert("Validation error", e.getMessage());
+            stage.showAndWait();
+        } catch (IOException e) {
+            System.out.println("Error opening Edit Product window: " + e.getMessage());
         }
     }
 
@@ -109,20 +95,11 @@ public class MainController {
         }
         productService.deleteProduct(selected.getId());
         loadProducts();
-        clearFields();
     }
 
     private void loadProducts() {
         productList.clear();
         productList.addAll(productService.getAllProducts());
-        productTable.refresh();
-    }
-
-    private void clearFields() {
-        nameField.clear();
-        categoryField.clear();
-        quantityField.clear();
-        priceField.clear();
     }
 
     private void showAlert(String title, String message) {
@@ -130,11 +107,5 @@ public class MainController {
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    @FXML
-    public void handleReset() {
-        productTable.getSelectionModel().clearSelection();
-        clearFields();
     }
 }

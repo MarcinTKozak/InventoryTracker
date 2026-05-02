@@ -8,17 +8,12 @@
             prefHeight="600.0" prefWidth="900.0">
 
     <top>
-        <VBox spacing="10" style="-fx-padding: 10;">
-            <Label text="Inventory Tracker" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+        <VBox spacing="10" style="-fx-padding: 15;">
+            <Label text="Inventory Tracker" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
             <HBox spacing="10">
-                <TextField fx:id="nameField" promptText="Product name"/>
-                <TextField fx:id="categoryField" promptText="Category"/>
-                <TextField fx:id="quantityField" promptText="Quantity"/>
-                <TextField fx:id="priceField" promptText="Price"/>
                 <Button text="Add Product" onAction="#handleAddProduct"/>
-                <Button text="Update" onAction="#handleUpdateProduct"/>
+                <Button text="Edit Product" onAction="#handleEditProduct"/>
                 <Button text="Delete" onAction="#handleDeleteProduct"/>
-                <Button text="Reset" onAction="#handleReset"/>
             </HBox>
         </VBox>
     </top>
