@@ -28,6 +28,8 @@ public class MainController {
     private TableColumn<Product, Integer> quantityColumn;
     @FXML
     private TableColumn<Product, Double> priceColumn;
+    @FXML
+    private TableColumn<Product, String> lastModifiedColumn;
 
     private final ProductService productService = new ProductService();
     private final ObservableList<Product> productList = FXCollections.observableArrayList();
@@ -39,6 +41,7 @@ public class MainController {
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        lastModifiedColumn.setCellValueFactory(new PropertyValueFactory<>("lastModified"));
 
         productTable.setItems(productList);
         loadProducts();

@@ -10,21 +10,25 @@ import java.util.List;
 
 public class ProductDao {
 
-    public void addProduct(Product product) {
+    public int addProduct(Product product) {
+        String sql = "INSERT INTO products (name, category, quantity, price, last_modified) VALUES (?, ?, ?, ?, ?)";
 
-        String sql = "INSERT INTO products (name, category, quantity, price) VALUES (?,?,?,?)";
-
-        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, product.getName());
             stmt.setString(2, product.getCategory());
             stmt.setInt(3, product.getQuantity());
             stmt.setDouble(4, product.getPrice());
+            stmt.setString(5, product.getLastModified());
             stmt.executeUpdate();
-            System.out.println("Product updated successfully");
 
+            ResultSet keys = stmt.getGeneratedKeys();
+            if (keys.next()) {
+                return keys.getInt(1);
+            }
         } catch (SQLException e) {
-            System.out.println("Error updating product: " + e.getMessage());
+            System.out.println("Error adding product: " + e.getMessage());
         }
+        return -1;
     }
 
     public List<Product> getAllProducts() {
@@ -41,6 +45,7 @@ public class ProductDao {
                         rs.getDouble("price")
                 );
                 product.setId(rs.getInt("id"));
+                product.setLastModified(rs.getString("last_modified"));
                 products.add(product);
             }
 
@@ -52,14 +57,15 @@ public class ProductDao {
     }
 
     public void updateProduct(Product product) {
-        String sql = "UPDATE products SET name=?, category=?, quantity=?, price=? WHERE id=?";
+        String sql = "UPDATE products SET name=?, category=?, quantity=?, price=?, last_modified=? WHERE id=?";
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
             stmt.setString(1, product.getName());
             stmt.setString(2, product.getCategory());
             stmt.setInt(3, product.getQuantity());
             stmt.setDouble(4, product.getPrice());
-            stmt.setInt(5, product.getId());
+            stmt.setString(5, product.getLastModified());
+            stmt.setInt(6, product.getId());
             stmt.executeUpdate();
             System.out.println("Product updated successfully.");
         } catch (SQLException e) {

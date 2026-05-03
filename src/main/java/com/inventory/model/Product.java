@@ -7,6 +7,7 @@ public class Product {
     private String category;
     private int quantity;
     private double price;
+    private String lastModified;
 
     public Product() {
     }
@@ -56,6 +57,14 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
     }
 
     @Override

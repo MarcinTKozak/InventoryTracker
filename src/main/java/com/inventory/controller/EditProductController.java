@@ -1,6 +1,7 @@
 package com.inventory.controller;
 
 import com.inventory.model.Product;
+import com.inventory.service.DeliveryService;
 import com.inventory.service.ProductService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -39,6 +40,8 @@ public class EditProductController {
             product.setPrice(Double.parseDouble(priceField.getText()));
 
             productService.updateProduct(product);
+            DeliveryService deliveryService = new DeliveryService();
+            deliveryService.addDelivery(product.getId(), product.getQuantity(), product.getPrice());
 
             if (onProductUpdated != null) {
                 onProductUpdated.run();

@@ -2,6 +2,7 @@ package com.inventory.service;
 
 import com.inventory.dao.ProductDao;
 import com.inventory.model.Product;
+import com.inventory.service.DeliveryService;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class ProductService {
 
     private final ProductDao productDao = new ProductDao();
 
-    public void addProduct(String name, String category, int quantity, double price) {
+    public int addProduct(String name, String category, int quantity, double price) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Product name cannot be empty.");
         }
@@ -20,7 +21,8 @@ public class ProductService {
             throw new IllegalArgumentException("Price cannto be negative");
         }
         Product product = new Product(name.trim(), category.trim(), quantity, price);
-        productDao.addProduct(product);
+        product.setLastModified(new DeliveryService().getCurrentDateTime());
+        return productDao.addProduct(product);
     }
 
     public List<Product> getAllProducts() {
@@ -37,7 +39,9 @@ public class ProductService {
         if (product.getPrice() < 0) {
             throw new IllegalArgumentException("Price cannot be negative");
         }
+        product.setLastModified(new DeliveryService().getCurrentDateTime());
         productDao.updateProduct(product);
+
     }
 
     public void deleteProduct(int id) {

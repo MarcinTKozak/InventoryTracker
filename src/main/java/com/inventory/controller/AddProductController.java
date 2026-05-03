@@ -1,5 +1,6 @@
 package com.inventory.controller;
 
+import com.inventory.service.DeliveryService;
 import com.inventory.service.ProductService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -28,7 +29,9 @@ public class AddProductController {
             int quantity = Integer.parseInt(quantityField.getText());
             double price = Double.parseDouble(priceField.getText());
 
-            productService.addProduct(name, category, quantity, price);
+            int productId = productService.addProduct(name, category, quantity, price);
+            DeliveryService deliveryService = new DeliveryService();
+            deliveryService.addDelivery(productId, quantity, price);
 
             if (onProductAdded != null) {
                 onProductAdded.run();

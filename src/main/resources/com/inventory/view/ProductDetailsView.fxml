@@ -26,6 +26,16 @@
         <Label fx:id="priceLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
     </GridPane>
 
+    <Label text="Delivery History" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+    <TableView fx:id="deliveriesTable" prefHeight="200">
+        <columns>
+            <TableColumn fx:id="deliveryDateColumn" text="Date" prefWidth="150"/>
+            <TableColumn fx:id="deliveryQuantityColumn" text="Quantity" prefWidth="100"/>
+            <TableColumn fx:id="deliveryPriceColumn" text="Price" prefWidth="100"/>
+        </columns>
+    </TableView>
+
     <HBox spacing="10">
         <Button text="Close" onAction="#handleClose"/>
     </HBox>
