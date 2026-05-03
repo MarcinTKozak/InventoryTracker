@@ -45,6 +45,11 @@ public class MainController {
 
         productTable.setItems(productList);
         loadProducts();
+        productTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                handleViewDetails();
+            }
+        });
     }
 
     @FXML
@@ -128,6 +133,7 @@ public class MainController {
 
             ProductDetailsController controller = loader.getController();
             controller.setProduct(selected);
+            controller.setOnProductUpdated(this::loadProducts);
 
             stage.showAndWait();
         } catch (IOException e) {

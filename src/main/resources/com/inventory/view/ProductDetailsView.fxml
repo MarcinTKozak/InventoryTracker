@@ -38,6 +38,8 @@
 
     <HBox spacing="10">
         <Button text="Close" onAction="#handleClose"/>
+        <Button text="Add Stock" onAction="#handleAddStock"/>
+        <Button text="Edit" onAction="#handleEdit"/>
     </HBox>
 
 </VBox>

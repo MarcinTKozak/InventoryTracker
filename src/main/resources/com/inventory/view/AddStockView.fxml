@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.inventory.controller.AddStockController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <Label text="Add Stock" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Quantity:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="quantityField" promptText="Quantity"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="250"/>
+
+        <Label text="Price:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="priceField" promptText="Price"
+                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Save" onAction="#handleSave"/>
+        <Button text="Cancel" onAction="#handleCancel"/>
+    </HBox>
+
+</VBox>
