@@ -128,6 +128,9 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/inventory/view/ProductDetailsView.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Product Details");
+            Stage mainStage = (Stage) productTable.getScene().getWindow();
+            stage.setWidth(mainStage.getWidth());
+            stage.setHeight(mainStage.getHeight());
             stage.setScene(new Scene(loader.load()));
             stage.initModality(Modality.APPLICATION_MODAL);
 
