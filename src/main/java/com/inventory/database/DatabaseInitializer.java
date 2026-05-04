@@ -18,6 +18,21 @@ public class DatabaseInitializer {
                 )
                 
                 """;
+        String createCategoriesTable = """
+        CREATE TABLE IF NOT EXISTS categories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            parent_id INTEGER,
+            FOREIGN KEY (parent_id) REFERENCES categories(id)
+        )
+        """;
+
+        try (Statement stmt = DatabaseConnection.getConnection().createStatement()) {
+            stmt.execute(createCategoriesTable);
+            System.out.println("Categories table created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating categories table: " + e.getMessage());
+        }
 
         try (Statement stmt = DatabaseConnection.getConnection().createStatement()) {
             stmt.execute(crateProductsTable);
