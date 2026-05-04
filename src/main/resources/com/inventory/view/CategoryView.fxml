@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.inventory.controller.CategoryController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <Label text="Manage Categories" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Category Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="categoryNameField" promptText="Category name"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="250"/>
+
+        <Label text="Parent Category:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="parentCategoryComboBox" promptText="Select parent (optional)"
+                  GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="250"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Add Category" onAction="#handleAddCategory"/>
+        <Button text="Close" onAction="#handleClose"/>
+    </HBox>
+
+    <Label text="Existing Categories" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+    <TreeView fx:id="categoryTreeView" prefHeight="300"/>
+
+</VBox>

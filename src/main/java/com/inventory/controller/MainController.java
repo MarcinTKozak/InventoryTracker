@@ -143,4 +143,17 @@ public class MainController {
             System.out.println("Error opening Product Details window: " + e.getMessage());
         }
     }
+    @FXML
+    public void handleManageCategories() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/inventory/view/CategoryView.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Manage Categories");
+            stage.setScene(new Scene(loader.load()));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            System.out.println("Error opening Categories window: " + e.getMessage());
+        }
+    }
 }
