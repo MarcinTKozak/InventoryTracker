@@ -11,78 +11,118 @@ import java.util.List;
 
 public class CategoryController {
 
-    @FXML private TextField categoryNameField;
-    @FXML private ComboBox<Category> parentCategoryComboBox;
-    @FXML private TreeView<String> categoryTreeView;
+    @FXML private ComboBox<Category> mainCategoryComboBox;
+    @FXML private ComboBox<Category> subCategoryComboBox;
+    @FXML private ComboBox<Category> variantComboBox;
 
     private final CategoryService categoryService = new CategoryService();
 
     @FXML
     public void initialize() {
-        loadParentCategories();
-        loadCategoryTree();
+        loadMainCategories();
+
+        mainCategoryComboBox.setOnAction(e -> {
+            Category selected = mainCategoryComboBox.getValue();
+            if (selected != null) {
+                loadSubCategories(selected.getId());
+            }
+        });
+
+        subCategoryComboBox.setOnAction(e -> {
+            Category selected = subCategoryComboBox.getValue();
+            if (selected != null) {
+                loadVariants(selected.getId());
+            }
+        });
     }
 
-    private void loadParentCategories() {
-        List<Category> rootCategories = categoryService.getRootCategories();
-        parentCategoryComboBox.setItems(FXCollections.observableArrayList(rootCategories));
-        parentCategoryComboBox.setCellFactory(lv -> new ListCell<>() {
+    private void loadMainCategories() {
+        List<Category> categories = categoryService.getRootCategories();
+        mainCategoryComboBox.setItems(FXCollections.observableArrayList(categories));
+        setCellFactory(mainCategoryComboBox);
+    }
+
+    private void loadSubCategories(int parentId) {
+        List<Category> subcategories = categoryService.getSubcategories(parentId);
+        subCategoryComboBox.setItems(FXCollections.observableArrayList(subcategories));
+        subCategoryComboBox.setValue(null);
+        variantComboBox.setItems(FXCollections.observableArrayList());
+        variantComboBox.setValue(null);
+        setCellFactory(subCategoryComboBox);
+    }
+
+    private void loadVariants(int parentId) {
+        List<Category> variants = categoryService.getSubcategories(parentId);
+        variantComboBox.setItems(FXCollections.observableArrayList(variants));
+        variantComboBox.setValue(null);
+        setCellFactory(variantComboBox);
+    }
+
+    private void setCellFactory(ComboBox<Category> comboBox) {
+        comboBox.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Category item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty || item == null ? null : item.getName());
             }
         });
-        parentCategoryComboBox.setButtonCell(new ListCell<>() {
+        comboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(Category item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty || item == null ? "Select parent (optional)" : item.getName());
+                setText(empty || item == null ? "" : item.getName());
             }
         });
     }
 
-    private void loadCategoryTree() {
-        TreeItem<String> root = new TreeItem<>("Categories");
-        root.setExpanded(true);
-
-        List<Category> rootCategories = categoryService.getRootCategories();
-        for (Category category : rootCategories) {
-            TreeItem<String> categoryItem = new TreeItem<>(category.getName());
-            List<Category> subcategories = categoryService.getSubcategories(category.getId());
-            for (Category sub : subcategories) {
-                TreeItem<String> subItem = new TreeItem<>(sub.getName());
-                List<Category> subSubcategories = categoryService.getSubcategories(sub.getId());
-                for (Category subSub : subSubcategories) {
-                    subItem.getChildren().add(new TreeItem<>(subSub.getName()));
-                }
-                categoryItem.getChildren().add(subItem);
-            }
-            root.getChildren().add(categoryItem);
+    @FXML
+    public void handleAddMainCategory() {
+        String name = showAddCategoryDialog("Add Main Category");
+        if (name != null) {
+            categoryService.addCategory(name, 0);
+            loadMainCategories();
         }
-        categoryTreeView.setRoot(root);
     }
 
     @FXML
-    public void handleAddCategory() {
-        try {
-            String name = categoryNameField.getText();
-            Category selectedParent = parentCategoryComboBox.getValue();
-            int parentId = selectedParent != null ? selectedParent.getId() : 0;
-
-            categoryService.addCategory(name, parentId);
-            categoryNameField.clear();
-            parentCategoryComboBox.setValue(null);
-            loadParentCategories();
-            loadCategoryTree();
-        } catch (IllegalArgumentException e) {
-            showAlert("Validation error", e.getMessage());
+    public void handleAddSubCategory() {
+        Category parent = mainCategoryComboBox.getValue();
+        if (parent == null) {
+            showAlert("No selection", "Please select a main category first.");
+            return;
         }
+        String name = showAddCategoryDialog("Add Subcategory under " + parent.getName());
+        if (name != null) {
+            categoryService.addCategory(name, parent.getId());
+            loadSubCategories(parent.getId());
+        }
+    }
+
+    @FXML
+    public void handleAddVariant() {
+        Category parent = subCategoryComboBox.getValue();
+        if (parent == null) {
+            showAlert("No selection", "Please select a subcategory first.");
+            return;
+        }
+        String name = showAddCategoryDialog("Add Variant under " + parent.getName());
+        if (name != null) {
+            categoryService.addCategory(name, parent.getId());
+            loadVariants(parent.getId());
+        }
+    }
+
+    private String showAddCategoryDialog(String title) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(title);
+        dialog.setHeaderText(null);
+        dialog.setContentText("Name:");
+        return dialog.showAndWait().orElse(null);
     }
 
     @FXML
     public void handleClose() {
-        Stage stage = (Stage) categoryNameField.getScene().getWindow();
+        Stage stage = (Stage) mainCategoryComboBox.getScene().getWindow();
         stage.close();
     }
 
