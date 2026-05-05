@@ -84,4 +84,27 @@ public class ProductDao {
             System.out.println("Error deleting product: " + e.getMessage());
         }
     }
+    public Product getProductByName(String name) {
+        String sql = "SELECT * FROM products WHERE name = ?";
+
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Product product = new Product(
+                        rs.getString("name"),
+                        rs.getString("category"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price")
+                );
+                product.setId(rs.getInt("id"));
+                product.setLastModified(rs.getString("last_modified"));
+                return product;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching product by name: " + e.getMessage());
+        }
+        return null;
+    }
 }

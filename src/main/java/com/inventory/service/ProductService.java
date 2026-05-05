@@ -18,8 +18,18 @@ public class ProductService {
             throw new IllegalArgumentException("Quantity cannot be negative.");
         }
         if (price < 0) {
-            throw new IllegalArgumentException("Price cannto be negative");
+            throw new IllegalArgumentException("Price cannot be negative.");
         }
+
+        Product existing = productDao.getProductByName(name.trim());
+
+        if (existing != null) {
+            existing.setQuantity(existing.getQuantity() + quantity);
+            existing.setLastModified(new DeliveryService().getCurrentDateTime());
+            productDao.updateProduct(existing);
+            return existing.getId();
+        }
+
         Product product = new Product(name.trim(), category.trim(), quantity, price);
         product.setLastModified(new DeliveryService().getCurrentDateTime());
         return productDao.addProduct(product);
