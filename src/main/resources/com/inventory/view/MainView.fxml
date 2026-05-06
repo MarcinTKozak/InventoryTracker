@@ -16,6 +16,7 @@
                 <Button text="Delete" onAction="#handleDeleteProduct"/>
                 <Button text="View Details" onAction="#handleViewDetails"/>
                 <Button text="Manage Categories" onAction="#handleManageCategories"/>
+                <Button text="All Products" onAction="#handleAllProducts"/>
             </HBox>
         </VBox>
     </top>

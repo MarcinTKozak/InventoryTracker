@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.inventory.controller.AllProductsController"
+      spacing="10" style="-fx-padding: 15;">
+
+    <Label text="All Products" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10">
+        <TextField fx:id="searchField" promptText="Search by name or category..." prefWidth="300"/>
+        <Button text="Search" onAction="#handleSearch"/>
+        <Button text="Clear" onAction="#handleClear"/>
+    </HBox>
+
+    <TableView fx:id="productTable" prefHeight="500">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="200"/>
+            <TableColumn fx:id="categoryColumn" text="Category" prefWidth="150"/>
+            <TableColumn fx:id="quantityColumn" text="Quantity" prefWidth="100"/>
+            <TableColumn fx:id="priceColumn" text="Price" prefWidth="100"/>
+            <TableColumn fx:id="lastModifiedColumn" text="Last Modified" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <Button text="Close" onAction="#handleClose"/>
+    </HBox>
+
+</VBox>

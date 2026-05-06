@@ -93,6 +93,19 @@ public class MainController {
             System.out.println("Error opening Edit Product window: " + e.getMessage());
         }
     }
+    @FXML
+    public void handleAllProducts() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/inventory/view/AllProductsView.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("All Products");
+            stage.setScene(new Scene(loader.load()));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            System.out.println("Error opening All Products window: " + e.getMessage());
+        }
+    }
 
     @FXML
     public void handleDeleteProduct() {
